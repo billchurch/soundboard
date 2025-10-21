@@ -1,0 +1,31 @@
+{
+  "name": "soundboard",
+  "version": "1.0.0",
+  "description": "Lightweight browser-based soundboard with static server and tests",
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon --watch src --watch public src/server.js",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write ."
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "mime": "^4.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "eslint": "^9.9.0",
+    "eslint-plugin-functional": "^6.0.0",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
+    "vitest": "^2.0.4"
+  }
+}
