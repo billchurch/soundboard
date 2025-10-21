@@ -7,8 +7,9 @@ import mime from 'mime';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PUBLIC_DIR = path.resolve(__dirname, '../public');
-const SRC_DIR = path.resolve(__dirname, '..');
+const ROOT_DIR = path.resolve(__dirname, '..');
+const DIST_DIR = path.join(ROOT_DIR, 'dist');
+const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 
 const DEFAULT_HEADERS = {
   'Cross-Origin-Opener-Policy': 'same-origin',
@@ -34,6 +35,21 @@ const toFilePath = (baseDir, pathname) => {
     .replace(/^(\.\.[/\\])+/, '')
     .replace(/^[/\\]+/, '');
   return path.join(baseDir, safePath);
+};
+
+const findExistingFile = async (candidates) => {
+  for (const candidate of candidates) {
+    try {
+      const fileStat = await stat(candidate);
+      if (fileStat.isFile()) {
+        return candidate;
+      }
+    } catch {
+      // ignore missing files and continue
+    }
+  }
+
+  return undefined;
 };
 
 const serveFile = async (req, res, filePath, headers = DEFAULT_HEADERS) => {
@@ -92,24 +108,43 @@ const server = createServer(async (req, res) => {
   const { pathname } = requestUrl;
 
   if (pathname === '/' || pathname === '') {
-    await serveFile(req, res, path.join(PUBLIC_DIR, 'index.html'), STATIC_CACHE_HEADERS);
+    const indexPath = await findExistingFile([
+      path.join(DIST_DIR, 'index.html'),
+      path.join(ROOT_DIR, 'index.html'),
+    ]);
+
+    if (indexPath) {
+      await serveFile(req, res, indexPath, STATIC_CACHE_HEADERS);
+      return;
+    }
+
+    res.writeHead(404, DEFAULT_HEADERS);
+    res.end('Not Found');
     return;
   }
 
-  if (pathname.startsWith('/sounds/')) {
-    const filePath = toFilePath(PUBLIC_DIR, pathname);
-    await serveFile(req, res, filePath, AUDIO_CACHE_HEADERS);
-    return;
-  }
+  const candidates = [toFilePath(DIST_DIR, pathname), toFilePath(PUBLIC_DIR, pathname)];
 
   if (pathname.startsWith('/src/')) {
-    const filePath = toFilePath(SRC_DIR, pathname);
-    await serveFile(req, res, filePath, STATIC_CACHE_HEADERS);
+    candidates.push(toFilePath(ROOT_DIR, pathname));
+  }
+
+  if (pathname === '/index.html') {
+    candidates.push(path.join(ROOT_DIR, 'index.html'));
+  }
+
+  const targetPath = await findExistingFile(candidates);
+
+  if (targetPath) {
+    const headers = pathname.includes('/sounds/')
+      ? AUDIO_CACHE_HEADERS
+      : STATIC_CACHE_HEADERS;
+    await serveFile(req, res, targetPath, headers);
     return;
   }
 
-  const publicFilePath = toFilePath(PUBLIC_DIR, pathname);
-  await serveFile(req, res, publicFilePath, STATIC_CACHE_HEADERS);
+  res.writeHead(404, DEFAULT_HEADERS);
+  res.end('Not Found');
 });
 
 server.listen(PORT, () => {

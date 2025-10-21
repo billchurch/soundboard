@@ -1,6 +1,6 @@
-import { SOUND_CLIPS, AUDIO_OPTIONS, DOM_SELECTORS } from '../src/constants.js';
-import { createAudioElement, playClip, stopClip } from '../src/audio.js';
-import { renderSoundButtons, bindSoundboardEvents } from '../src/dom.js';
+import { SOUND_CLIPS, AUDIO_OPTIONS, DOM_SELECTORS } from './constants.js';
+import { createAudioElement, playClip, stopClip } from './audio.js';
+import { renderSoundButtons, bindSoundboardEvents } from './dom.js';
 
 const ensureContainer = (selector) => {
   const element = document.querySelector(selector);
@@ -22,11 +22,15 @@ if (!grid) {
 const audioMap = new Map();
 
 SOUND_CLIPS.forEach((clip) => {
-  const audioElement = createAudioElement(clip, AUDIO_OPTIONS, { documentRef: document });
+  const audioElement = createAudioElement(clip, AUDIO_OPTIONS, {
+    documentRef: document,
+  });
   audioMap.set(clip.id, audioElement);
 });
 
-const buttonsFragment = renderSoundButtons(grid, SOUND_CLIPS, { documentRef: document });
+const buttonsFragment = renderSoundButtons(grid, SOUND_CLIPS, {
+  documentRef: document,
+});
 grid.appendChild(buttonsFragment);
 
 const onPlay = (clip, audioElement) =>
@@ -61,9 +65,7 @@ window.addEventListener('beforeunload', () => {
   stopAllClips().catch(() => {});
 });
 
-const isDev = typeof process !== 'undefined' && process?.env?.NODE_ENV !== 'production';
-
-if (typeof window !== 'undefined' && isDev) {
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
   window.soundboard = {
     clips: SOUND_CLIPS,
     audioMap,

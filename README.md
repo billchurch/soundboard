@@ -14,13 +14,13 @@ Lightweight browser soundboard that serves static assets over a minimal Node ser
 npm install
 ```
 
-### Run the Dev Server
+### Run the Vite Dev Server
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:3000` to load the soundboard. Each button displays its label and keyboard shortcut. Press the shortcut or click the button to play the associated clip. The UI shows a pressed state while the clip is active, and playback stops automatically when the tab becomes hidden.
+Open the URL printed by Vite (default `http://localhost:5173`) to load the soundboard. Each button displays its label and keyboard shortcut. Press the shortcut or click the button to play the associated clip. The UI shows a pressed state while the clip is active, and playback stops automatically when the tab becomes hidden.
 
 ### Required Audio Assets
 
@@ -36,20 +36,24 @@ Feel free to edit `src/constants.js` to adjust clips, filenames, or shortcuts.
 
 ## Scripts
 
-| Command              | Description                                |
-| -------------------- | ------------------------------------------ |
-| `npm run dev`        | Start the static server with file watching |
-| `npm run lint`       | Run ESLint across the project              |
-| `npm run test`       | Execute Vitest unit tests                  |
-| `npm run format`     | Check formatting with Prettier             |
-| `npm run format:fix` | Format files in-place using Prettier       |
+| Command              | Description                                       |
+| -------------------- | ------------------------------------------------- |
+| `npm run dev`        | Launch Vite dev server                            |
+| `npm run build`      | Produce a production bundle in `dist/`            |
+| `npm run preview`    | Preview the production build locally via Vite     |
+| `npm run serve`      | Serve the static assets with the Node http server |
+| `npm run lint`       | Run ESLint across the project                     |
+| `npm run test`       | Execute Vitest unit tests                         |
+| `npm run format`     | Check formatting with Prettier                    |
+| `npm run format:fix` | Format files in-place using Prettier              |
 
 ## Project Layout
 
 ```
 .
-├── public/            # Browser entry point, HTML, styles, audio assets
-├── src/               # Shared constants, audio helpers, DOM utilities, server
+├── index.html         # Root HTML entry consumed by Vite
+├── public/            # Static assets copied as-is (audio clips)
+├── src/               # Browser entry, shared helpers, styles, Node server
 └── test/              # Vitest unit tests for pure modules
 ```
 
@@ -57,5 +61,5 @@ Feel free to edit `src/constants.js` to adjust clips, filenames, or shortcuts.
 
 - Add or remove clips by editing `SOUND_CLIPS` in `src/constants.js`.
 - Tweak volume, fade, or overlap behavior in `AUDIO_OPTIONS`.
-- Expand DOM/view logic in `src/dom.js` or style rules in `public/styles.css`.
+- Expand DOM/view logic in `src/dom.js` or style rules in `src/styles.css`.
 - Introduce additional settings modules following the Single Responsibility Principle to keep shared logic testable.
