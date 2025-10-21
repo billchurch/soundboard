@@ -2,10 +2,12 @@ import js from '@eslint/js';
 import functionalPlugin from 'eslint-plugin-functional';
 
 export default [
+  {
+    ignores: ['dist/**', 'public/sounds/**'],
+  },
   js.configs.recommended,
   {
     files: ['**/*.js'],
-    ignores: ['public/sounds/**'],
     languageOptions: {
       sourceType: 'module',
       globals: {
