@@ -47,6 +47,24 @@ const SOUND_CLIPS_INTERNAL = [
     file: 'wait.mp3',
     shortcut: 'KeyW',
   },
+  {
+    id: 'gnarly',
+    label: 'Gnarly',
+    file: 'gnarly-chorus.mp3',
+    shortcut: 'KeyG',
+  },
+  {
+    id: 'everythings-gnarly',
+    label: 'Everythings Gnarly',
+    file: 'everythings-gnarly.mp3',
+    shortcut: 'KeyE',
+  },
+  {
+    id: 'govt-knows',
+    label: 'Govt Knows',
+    file: 'govt-knows.mp3',
+    shortcut: 'KeyK',
+  },
 ];
 
 const AUDIO_OPTIONS_INTERNAL = {
