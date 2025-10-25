@@ -63,7 +63,7 @@ const SOUND_CLIPS_INTERNAL = [
     id: 'govt-knows',
     label: 'Govt Knows',
     file: 'govt-knows.mp3',
-    shortcut: 'KeyK',
+    shortcut: 'KeyO',
   },
 ];
 
